@@ -1,0 +1,32 @@
+<!--
+  TEK proje = tek Maven modülü (tek pom.xml). Katmanlar burada proje değil, klasör:
+    Entities/   DataAccess/   Business/   Controllers/ + Views/ + ViewModels/   (web kısmı kökte)
+  Multi-module versiyondaki 4 .csproj'un paketlerinin hepsi bu tek dosyada toplandı.
+  Spring: spring-boot-starter-web + thymeleaf + data-jpa + apache-poi hepsi aynı pom.xml'de.
+-->
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <!-- Spring: <maven.compiler.release>21</maven.compiler.release> -->
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- System, System.Linq vb. "using"leri her dosyaya otomatik ekler. -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- null güvenliği: string = asla null değil, string? = null olabilir. -->
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Multi-module'de DataAccess'teydi. EF Core = Hibernate + Spring Data JPA; SqlServer = JDBC driver + dialect. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.32" />
+    <!-- Multi-module'de Business'taydı. .xlsx okuma. Java: Apache POI. -->
+    <PackageReference Include="ClosedXML" Version="0.105.1" />
+    <!-- "dotnet ef migrations add" için. PrivateAssets=all → derlenen uygulamaya taşınmaz (Maven: <scope>provided</scope>). -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.32">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- ProjectReference yok: başka modül yok. -->
+
+</Project>

@@ -1,0 +1,17 @@
+# Lokal SQL Server. Spring Boot 3.1+'taki compose.yaml desteğiyle aynı fikir.
+# Apple Silicon (arm64): imaj sadece amd64 → Docker Desktop'ta "Use Rosetta for x86/amd64 emulation" açık olmalı.
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    container_name: firmaportal-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "FirmaPortal123!"   # appsettings.json'daki connection string ile aynı olmalı
+    ports:
+      - "1433:1433"
+    volumes:
+      - firmaportal-sql-data:/var/opt/mssql   # container silinse de veri kalsın
+
+volumes:
+  firmaportal-sql-data:

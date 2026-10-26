@@ -1,0 +1,9 @@
+# Derleme çıktıları (Maven: target/)
+bin/
+obj/
+.vs/
+.idea/
+*.user
+
+# Kişisel editör ayarları
+.vscode/
