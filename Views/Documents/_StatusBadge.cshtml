@@ -1,0 +1,13 @@
+@* Durum rozeti; liste ve detay sayfası ortak kullanır. Model sadece bir enum değeri. *@
+@model DocumentStatus
+@{
+    var (css, text) = Model switch
+    {
+        DocumentStatus.MudurOnayiBekliyor => ("bg-warning text-dark", "Müdür onayı bekliyor"),
+        DocumentStatus.PatronOnayiBekliyor => ("bg-info text-dark", "Patron onayı bekliyor"),
+        DocumentStatus.Onaylandi => ("bg-success", "Onaylandı (kilitli)"),
+        _ => ("bg-danger", "Reddedildi")
+    };
+    // (a, b) = tuple + deconstruction. Java'da yok (record ya da Map.Entry ile yapılır).
+}
+<span class="badge @css">@text</span>

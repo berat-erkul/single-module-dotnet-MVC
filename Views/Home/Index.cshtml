@@ -1,0 +1,31 @@
+@* Views/{Controller}/{Action}.cshtml konvansiyonu: HomeController.Index() → bu dosya. Spring: templates/home/index.html *@
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<h1>FirmaPortal</h1>
+<p class="lead">Excel belge onay akışı: Çalışan yükler → Müdür onaylar → Patron onaylar → kilitlenir.</p>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Kullanıcılar</h5>
+                <p class="card-text">Kullanıcı ekle, düzenle, sil (güvenlik yok, herkes erişir).</p>
+                <a class="btn btn-primary" asp-controller="Users" asp-action="Index">Kullanıcılara git</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Belgeler</h5>
+                <p class="card-text">
+                    Giriş gerekli. Deneme hesapları (şifre <code>1234</code>):
+                    <code>calisan@firma.com</code>, <code>mudur@firma.com</code>, <code>patron@firma.com</code>
+                </p>
+                <a class="btn btn-primary" asp-controller="Documents" asp-action="Index">Belgelere git</a>
+            </div>
+        </div>
+    </div>
+</div>

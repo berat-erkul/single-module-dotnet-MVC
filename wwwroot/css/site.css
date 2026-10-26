@@ -1,0 +1,2 @@
+/* wwwroot/ = statik dosyalar (Spring: src/main/resources/static/). Bootstrap CDN'den geliyor, burada sadece küçük ayarlar. */
+.preview-table td { white-space: nowrap; font-size: .875rem; }

@@ -1,0 +1,83 @@
+@model DocumentDetailsViewModel
+@{
+    var d = Model.Document;
+    ViewData["Title"] = d.FileName;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">@d.FileName <partial name="_StatusBadge" model="d.Status" /></h1>
+    <a class="btn btn-outline-secondary" asp-action="Download" asp-route-id="@d.Id">İndir</a>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Yükleyen</dt>
+    <dd class="col-sm-9">@d.UploadedBy.FullName — @d.UploadedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
+    @* "?." null-conditional: değer null ise hata vermez, null döner (Java: Optional.map). *@
+    <dt class="col-sm-3">Müdür kararı</dt>
+    <dd class="col-sm-9">@(d.ManagerDecisionAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "—")</dd>
+    <dt class="col-sm-3">Patron kararı</dt>
+    <dd class="col-sm-9">@(d.BossDecisionAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "—")</dd>
+    @if (d.RejectReason is not null)
+    {
+        <dt class="col-sm-3">Red sebebi</dt>
+        <dd class="col-sm-9 text-danger">@d.RejectReason</dd>
+    }
+</dl>
+
+@* Butonlar sadece izin varsa görünür; ama asıl koruma server'da (entity + service). Buton gizlemek güvenlik değildir. *@
+@if (Model.CanEdit)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Müdür karar vermeden önce</h5>
+            <form asp-action="Replace" asp-route-id="@d.Id" method="post" enctype="multipart/form-data" class="row g-2 mb-2">
+                <div class="col-auto"><input type="file" name="file" accept=".xlsx" class="form-control" required /></div>
+                <div class="col-auto"><button type="submit" class="btn btn-primary">Dosyayı değiştir</button></div>
+            </form>
+            <form asp-action="Delete" asp-route-id="@d.Id" method="post" onsubmit="return confirm('Belge silinsin mi?');">
+                <button type="submit" class="btn btn-outline-danger">Belgeyi sil</button>
+            </form>
+        </div>
+    </div>
+}
+
+@if (Model.CanDecide)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Karar</h5>
+            <form asp-action="Approve" asp-route-id="@d.Id" method="post" class="d-inline">
+                <button type="submit" class="btn btn-success">Onayla</button>
+            </form>
+            <form asp-action="Reject" asp-route-id="@d.Id" method="post" class="row g-2 mt-2">
+                @* name="reason" → Reject(int id, string reason) parametresi. Spring: @RequestParam String reason *@
+                <div class="col-md-6"><input name="reason" class="form-control" placeholder="Red sebebi" required /></div>
+                <div class="col-auto"><button type="submit" class="btn btn-danger">Reddet</button></div>
+            </form>
+        </div>
+    </div>
+}
+
+<h2 class="h5">Önizleme (ilk 20 satır)</h2>
+@if (Model.Preview.Count == 0)
+{
+    <p class="text-muted">Sayfa boş.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm preview-table">
+            @foreach (var row in Model.Preview)
+            {
+                <tr>
+                    @foreach (var cell in row)
+                    {
+                        <td>@cell</td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+<a asp-action="Index" class="btn btn-link mt-3">← Belgelere dön</a>

@@ -1,0 +1,13 @@
+@model UserFormViewModel
+@{
+    ViewData["Title"] = "Yeni Kullanıcı";
+}
+
+<h1>Yeni kullanıcı</h1>
+
+@* asp-action="Create" + method="post" → POST /Users/Create (UsersController'daki [HttpPost] Create). *@
+<form asp-action="Create" method="post" class="col-md-6">
+    <partial name="_UserForm" model="Model" />
+    <button type="submit" class="btn btn-success">Kaydet</button>
+    <a asp-action="Index" class="btn btn-link">Vazgeç</a>
+</form>

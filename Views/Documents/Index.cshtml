@@ -1,0 +1,46 @@
+@model List<Document>
+@{
+    ViewData["Title"] = "Belgeler";
+    var role = User.GetRole();
+    // Rolüne göre sayfa başlığı. Razor'da @{ } bloğu içinde düz C# yazılır.
+    var heading = role switch
+    {
+        Role.Calisan => "Yüklediğim belgeler",
+        Role.Mudur => "Müdür onayı bekleyen belgeler",
+        _ => "Patron onayı bekleyen ve onaylanmış belgeler"
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>@heading</h1>
+    @if (role == Role.Calisan)
+    {
+        <a class="btn btn-success" asp-action="Upload">+ Excel yükle</a>
+    }
+</div>
+
+@if (Model.Count == 0)
+{
+    <p class="text-muted">Gösterilecek belge yok.</p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr><th>Dosya</th><th>Yükleyen</th><th>Yüklenme</th><th>Durum</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model)
+            {
+                <tr>
+                    <td>@d.FileName</td>
+                    <td>@d.UploadedBy.FullName</td>
+                    @* UTC saklanıyor, yerel saate çevirip gösteriyoruz. Thymeleaf: #temporals.format(...) *@
+                    <td>@d.UploadedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                    <td><partial name="_StatusBadge" model="d.Status" /></td>
+                    <td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@d.Id">Aç</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

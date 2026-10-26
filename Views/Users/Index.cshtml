@@ -1,0 +1,37 @@
+@* @model = bu view'ın tipli modeli (controller'daki View(users)). Spring/Thymeleaf'te model tipsizdir; Razor'da derleme zamanında kontrol edilir. *@
+@model List<User>
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Kullanıcılar</h1>
+    <a class="btn btn-success" asp-action="Create">+ Yeni kullanıcı</a>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr><th>Ad Soyad</th><th>E-posta</th><th>Rol</th><th></th></tr>
+    </thead>
+    <tbody>
+        @* Razor'da C# doğrudan HTML'in içinde: @foreach. Spring/Thymeleaf: th:each="u : ${users}" *@
+        @foreach (var u in Model)
+        {
+            <tr>
+                @* @u.FullName otomatik HTML-encode edilir (XSS koruması). Thymeleaf: th:text *@
+                <td>@u.FullName</td>
+                <td>@u.Email</td>
+                <td><span class="badge bg-secondary">@u.Role</span></td>
+                <td class="text-end">
+                    @* asp-route-id → /Users/Edit/5. Thymeleaf: th:href="@{/users/{id}/edit(id=${u.id})}" *@
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@u.Id">Düzenle</a>
+                    @* Silme POST ile; form tag helper'ı CSRF token'ını gizli input olarak kendisi ekler. *@
+                    <form asp-action="Delete" asp-route-id="@u.Id" method="post" class="d-inline"
+                          onsubmit="return confirm('@u.FullName silinsin mi?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

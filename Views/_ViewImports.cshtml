@@ -1,0 +1,7 @@
+@* Tüm view'lara otomatik eklenen using'ler + Tag Helper'lar. (Razor yorumu "@" + "*" ile açılır, "*" + "@" ile kapanır.)
+   Spring/Thymeleaf: xmlns:th namespace'i + her şablonda erişilebilen ortak import'lar. *@
+@using FirmaPortal.Entities
+@using FirmaPortal.ViewModels
+@using FirmaPortal.Infrastructure
+@* Tag Helper'lar: asp-for, asp-action, asp-controller gibi HTML attribute'larını etkinleştirir (Thymeleaf'teki th:* attribute'ları). *@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
